@@ -126,6 +126,7 @@ static NSString * const kDDMApiProxyDispatchItemKeyCallbackFail = @"kDDMApiProxy
     
     
     __block NSURLSessionDataTask *dataTask = nil;
+    
     dataTask = [[self httpSessionManagerWithServiceIdentifier:servieIdentifier] uploadTaskWithStreamedRequest:request progress:^(NSProgress * uploadProgress) {
         progress ? progress(uploadProgress) : nil;
         
@@ -156,6 +157,9 @@ static NSString * const kDDMApiProxyDispatchItemKeyCallbackFail = @"kDDMApiProxy
         
     }];
     NSNumber *requestId = @([dataTask taskIdentifier]);
+    
+    [dataTask resume];
+
     return [requestId integerValue];
 }
 

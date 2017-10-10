@@ -10,5 +10,5 @@
 #import "DDMLargeFileDownloadInterface.h"
 
 @interface DDMLargeFileDownloadProxy : NSObject<DDMLargeFileDownloadInterface>
-
+- (instancetype)initWithServiceIdentifier:(NSString *)serviceIdentifier;
 @end

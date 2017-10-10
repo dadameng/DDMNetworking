@@ -62,7 +62,7 @@ __strong typeof(weakSelf) strongSelf = weakSelf;                                
             
         } else {
             self.child = (id <DDMAPIManager>)self;
-            NSException *exception = [[NSException alloc] initWithName:@"CTAPIBaseManager提示" reason:[NSString stringWithFormat:@"%@没有遵循CTAPIManager协议",self.child] userInfo:nil];
+            NSException *exception = [[NSException alloc] initWithName:@"DDMAPIBaseManager提示" reason:[NSString stringWithFormat:@"%@没有遵循DDMAPIManager协议",self.child] userInfo:nil];
             @throw exception;
         }
     }
@@ -221,7 +221,11 @@ __strong typeof(weakSelf) strongSelf = weakSelf;                                
 }
 - (void)uploadProgress:(NSProgress *)uploadProgress{
     
-    [self.delegate managerCallApiUploadProgress:uploadProgress manager:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(uploadProgress:)]) {
+        [self.delegate managerCallApiUploadProgress:uploadProgress manager:self];
+
+    }
+    
     
 }
 - (void)failedOnCallingAPI:(DDMURLResponse *)response withErrorType:(DDMAPIManagerErrorType)errorType

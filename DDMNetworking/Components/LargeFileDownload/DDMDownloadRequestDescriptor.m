@@ -15,5 +15,15 @@
 @end
 
 @implementation DDMDownloadRequestDescriptor
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        
+        _progressModel = [[DDMDownloadRequestProgressDescriptor alloc] init];
+        _downloadState = DDMDownLoadRequestTaskNone;
+        
+    }
+    return self;
+}
 
 @end

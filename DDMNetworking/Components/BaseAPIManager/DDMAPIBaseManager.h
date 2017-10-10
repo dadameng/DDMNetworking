@@ -51,6 +51,7 @@ static NSString * const kDDMAPIBaseManagerRequestID = @"kDDMAPIBaseManagerReques
 @required
 - (void)managerCallAPIDidSuccess:(DDMAPIBaseManager *)manager;
 - (void)managerCallAPIDidFailed:(DDMAPIBaseManager *)manager;
+@optional
 - (void)managerCallApiUploadProgress:(NSProgress *)uploadProgress manager:(DDMAPIBaseManager *)manager;
 
 @end

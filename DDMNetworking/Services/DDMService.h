@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "DDMURLResponse.h"
 
-// 所有CTService的派生类都要符合这个protocol
+// 所有DDMService的派生类都要符合这个protocol
 @protocol DDMServiceProtocol <NSObject>
 
 @property (nonatomic, readonly) BOOL isOnline;
@@ -36,7 +36,7 @@
 
 - (NSString *)urlGeneratingRuleByMethodName:(NSString *)method;
 
-//- (void)successedOnCallingAPI:(CTURLResponse *)response;
+//- (void)successedOnCallingAPI:(DDMURLResponse *)response;
 
 //提供拦截器集中处理Service错误问题，比如token失效要抛通知等
 - (BOOL)shouldCallBackByFailedOnCallingAPI:(DDMURLResponse *)response;

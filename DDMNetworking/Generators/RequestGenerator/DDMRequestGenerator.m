@@ -75,10 +75,17 @@
     NSError *serializationError = nil;
     
     DDMService *service = [[DDMServiceFactory sharedInstance] serviceWithIdentifier:serviceIdentifier];
+    
+    id requestSerializer;
+    if ([service respondsToSelector:@selector(sessionManager)]) {
+        requestSerializer = [[service.child sessionManager] requestSerializer];
+    }
+    requestSerializer =  requestSerializer ? : self.httpRequestSerializer;
+    
     NSString *urlString = [service urlGeneratingRuleByMethodName:methodName];
     NSDictionary *totalRequestParams = [self totalRequestParamsByService:service requestParams:requestParams];
     
-    NSMutableURLRequest *request = [self.httpRequestSerializer multipartFormRequestWithMethod:@"POST" URLString:urlString parameters:totalRequestParams constructingBodyWithBlock:block error:&serializationError];
+    NSMutableURLRequest *request = [requestSerializer multipartFormRequestWithMethod:@"POST" URLString:urlString parameters:totalRequestParams constructingBodyWithBlock:block error:&serializationError];
     if ([service.child respondsToSelector:@selector(extraHttpHeadParmasWithMethodName:)]) {
         NSDictionary *dict = [service.child extraHttpHeadParmasWithMethodName:methodName];
         if (dict) {
@@ -95,11 +102,17 @@
 }
 - (NSURLRequest *)generateRequestWithServiceIdentifier:(NSString *)serviceIdentifier requestParams:(NSDictionary *)requestParams methodName:(NSString *)methodName requestWithMethod:(NSString *)method {
     DDMService *service = [[DDMServiceFactory sharedInstance] serviceWithIdentifier:serviceIdentifier];
+    
+    id requestSerializer;
+    if ([service respondsToSelector:@selector(sessionManager)]) {
+        requestSerializer = [[service.child sessionManager] requestSerializer];
+    }
+    requestSerializer =  requestSerializer ? : self.httpRequestSerializer;
     NSString *urlString = [service urlGeneratingRuleByMethodName:methodName];
     
     NSDictionary *totalRequestParams = [self totalRequestParamsByService:service requestParams:requestParams];
     
-    NSMutableURLRequest *request = [self.httpRequestSerializer requestWithMethod:method URLString:urlString parameters:totalRequestParams error:NULL];
+    NSMutableURLRequest *request = [requestSerializer requestWithMethod:method URLString:urlString parameters:totalRequestParams error:NULL];
     
     if (![method isEqualToString:@"GET"] && [DDMNetworkingConfigurationManager sharedInstance].shouldSetParamsInHTTPBodyButGET) {
         request.HTTPBody = [NSJSONSerialization dataWithJSONObject:requestParams options:0 error:NULL];

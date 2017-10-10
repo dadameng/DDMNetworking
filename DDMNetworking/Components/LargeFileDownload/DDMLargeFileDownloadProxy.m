@@ -108,6 +108,10 @@
             downloadModel.downloadState = DDMDownLoadRequestTaskWillDownload;
             [self.waitForDownloadTasks addObject:downloadModel];
         }
+        if ([self hasDownloadedFileWithDownloadModel:downloadModel]) {
+            completionHandler(downloadModel,[NSError errorWithDomain:@"已经下载过了" code:6000 userInfo:@{ NSLocalizedDescriptionKey : @"已经下载过了" }]);
+        }
+
         return;
     }
     [self createFolderAtPath:[downloadModel.fileDestinationURL stringByDeletingLastPathComponent]];
@@ -133,7 +137,7 @@
             [self setValuesForDownloadModel:downloadModel withProgress:downloadProgress.fractionCompleted];
             progress ? progress(downloadModel) : nil;
         } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-            return [NSURL URLWithString:downloadModel.fileDestinationURL];
+            return [NSURL fileURLWithPath:downloadModel.fileDestinationURL];
         } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
             if (error) {
                 [self cancelDownloadTaskWithDownloadModel:downloadModel];
@@ -229,6 +233,8 @@
 
 -(BOOL)hasDownloadedFileWithDownloadModel:(DDMDownloadRequestDescriptor *)downloadModel{
     if ([self.fileManager fileExistsAtPath:[downloadModel.fileDestinationURL stringByAppendingPathComponent:downloadModel.fileName]]) {
+        downloadModel.downloadState = DDMDownLoadRequestTaskFinishedDownload;
+
         NSLog(@"已下载的文件...");
         return YES;
     }
